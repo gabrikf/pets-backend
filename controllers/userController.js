@@ -47,6 +47,7 @@ const deleteUser = async (req, res) => {
 const secret = process.env.JWT_SECRET
 const authUser = async (req, res) => {
   const { email, passwd } = req.body
+  const id = await User.findPassByEmailId(email)
   const userPass = await User.findPassByEmail(email)
   const array = []
   for(const object of userPass){
@@ -55,7 +56,8 @@ const authUser = async (req, res) => {
   const pass = array[0]
   if(bcrypt.compareSync(passwd, pass)){
     const token = jwt.sign({
-      email,
+      id,
+      email
     }, secret, { expiresIn: '2 days'})
     return res.send({
       success: true,

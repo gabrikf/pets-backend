@@ -35,7 +35,9 @@ const removeImage = async (req, res) => {
     const headerParts = header.split(' ')
     const payload = jwt.verify(headerParts[1], secret)
     const user_email = payload.email
-    await Pets.create([user_email, pet_name, pet_age, animal_type, description])
+    const users_id = payload.id[0].id
+    console.log(users_id)
+    await Pets.create([users_id, user_email, pet_name, pet_age, animal_type, description])
     res.send({
       success: true,
       data : req.body
@@ -49,7 +51,13 @@ const getAll = async (req, res) => {
 }
 
   const getById = async (req, res) => {
-    const pets = await Pets.findById(req.params.id)
+    const secret = process.env.JWT_SECRET
+    const header = req.headers.authorization
+    const headerParts = header.split(' ')
+    const payload = jwt.verify(headerParts[1], secret)
+    const users_id = payload.id[0].id
+    console.log(users_id)
+    const pets = await Pets.findById(users_id)
     res.send(pets)
   }
 

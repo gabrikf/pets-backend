@@ -17,6 +17,12 @@ const init = connection => {
     const [results] = await conn.query('select passwd from users where email = ?', [email])
     return results
   }
+  const findPassByEmailId = async(email) => {
+    const conn = await connection
+    const [results] = await conn.query('select id from users where email = ?', [email])
+    return results
+  }
+
 
   const findAll = async() => {
     const conn = await connection
@@ -38,6 +44,7 @@ const init = connection => {
     findAll,
     findById,
     findPassByEmail: findPassByEmail,
+    findPassByEmailId,
     update,
     remove
   }

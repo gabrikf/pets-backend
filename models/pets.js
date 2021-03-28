@@ -1,7 +1,7 @@
 const init = connection => {
   const create = async(data) => {
     const conn = await connection
-    await conn.query('insert into pets (user_email, pet_name, pet_age, animal_type, description) values (?, ?, ?, ?, ?)',data)
+    await conn.query('insert into pets (users_id, user_email, pet_name, pet_age, animal_type, description) values (?, ?, ?, ?, ?, ?)',data)
   }
 
   const remove = async(id) => {
@@ -38,9 +38,8 @@ const init = connection => {
 
   const findById = async(id) => {
     const conn = await connection
-    const [results] = await conn.query('select * from pets where id = ' + id)
-    const petsWithImages = await findImages(results)
-    return petsWithImages[0]
+    const [results] = await conn.query('select * from pets INNER JOIN users ON pets.users_id = users.id where users.id = ?', id)
+    return findImages(results)
   }
 
   const findByEmail = async(user_email) => {
@@ -52,7 +51,7 @@ const init = connection => {
 
   const findAll = async() => {
     const conn = await connection
-    const [results] = await conn.query('select * from pets')
+    const [results] = await conn.query('select * from pets INNER JOIN users ON pets.users_id = users.id')
     return findImages(results)
   }
   

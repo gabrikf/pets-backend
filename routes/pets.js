@@ -14,7 +14,7 @@ router.delete('/:id', petsController.remove)
 
 router.put('/:id', petsController.put)
 
-router.get('/:id', petsController.getById)
+router.get('/', petsController.getById)
 
 router.get('/', petsController.getByEmail)
 
