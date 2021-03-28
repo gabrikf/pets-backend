@@ -10,11 +10,13 @@ const createUser = async (req, res) => {
   const { name, passwd, email, whatsapp, city, state, neighborhood } = req.body
   
   const hashPasswd = bcrypt.hashSync(passwd, salt)
+  
   await User.create([ name, hashPasswd, email, whatsapp, city, state, neighborhood ])
   res.send({
     success: true,
     data : req.body
   })
+
 }
 
 
@@ -44,9 +46,16 @@ const deleteUser = async (req, res) => {
   success: true
 })
 }
+
 const secret = process.env.JWT_SECRET
 const authUser = async (req, res) => {
   const { email, passwd } = req.body
+  if(email !== User.findPassByEmailId(email)){
+    res.send({
+      success: false,
+      messege: 'wrong credentials.'
+    })
+  }
   const id = await User.findPassByEmailId(email)
   const userPass = await User.findPassByEmail(email)
   const array = []
