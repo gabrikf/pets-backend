@@ -16,7 +16,7 @@ router.put('/:id', petsController.put)
 
 router.get('/', petsController.getById)
 
-router.get('/', petsController.getByEmail)
+// router.get('/', petsController.getByEmail)
 
 router.post('/:id/upload', upload, petsController.uploadImage)
 

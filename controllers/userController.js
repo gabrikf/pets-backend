@@ -50,12 +50,7 @@ const deleteUser = async (req, res) => {
 const secret = process.env.JWT_SECRET
 const authUser = async (req, res) => {
   const { email, passwd } = req.body
-  if(email !== User.findPassByEmailId(email)){
-    res.send({
-      success: false,
-      messege: 'wrong credentials.'
-    })
-  }
+    
   const id = await User.findPassByEmailId(email)
   const userPass = await User.findPassByEmail(email)
   const array = []
