@@ -6,7 +6,7 @@ const init = connection => {
 
   const remove = async(id) => {
     const conn = await connection
-    await conn.query('delete from pets where id=? limit 1', [id])
+    await conn.query('delete from pets where id_pet =? limit 1', [id])
   }
 
   const update = async(id, data) => {
@@ -19,7 +19,7 @@ const init = connection => {
       return []
     }
     const conn = await connection
-    const petsIds = results.map(pets => pets.id).join(',')
+    const petsIds = results.map(pets => pets.id_pet).join(',')
     const [images] = await conn.query('select * from images where pets_id in (' + petsIds +') group by pets_id')
     const mapImages = images.reduce((anterior, atual) => {
       return {
@@ -30,7 +30,7 @@ const init = connection => {
     const petss = results.map(pets => {
       return {
         ...pets,
-        images: mapImages[pets.id]
+        images: mapImages[pets.id_pet]
       }
     })
     return petss
