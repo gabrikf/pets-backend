@@ -1,7 +1,8 @@
 const init = connection => {
   const create = async(data) => {
     const conn = await connection
-    await conn.query('insert into pets (users_id, user_email, pet_name, pet_age, animal_type, description) values (?, ?, ?, ?, ?, ?)',data)
+    data.push(JSON.stringify({}))
+    await conn.query('insert into pets (users_id, user_email, pet_name, pet_age, animal_type, description, likes) values (?, ?, ?, ?, ?, ?, ?)',data)
   }
 
   const remove = async(id) => {
@@ -12,6 +13,12 @@ const init = connection => {
   const update = async(id, data) => {
     const conn = await connection
     await conn.query('update pets set pat_name = ?, pet_age = ?, animal_type, description = ? where id=?', [...data, id])
+  }
+
+  const updateLike = async(id, data) => {
+    const conn = await connection
+    data = JSON.stringify(data)
+    return conn.query('update pets set likes = ? where id_pet=?', [data, id])
   }
 
   const findImages = async(results) => {
@@ -38,7 +45,7 @@ const init = connection => {
 
   const findById = async(id) => {
     const conn = await connection
-    const [results] = await conn.query('select * from pets INNER JOIN users ON pets.users_id = users.id where users.id = ?', id)
+    const [results] = await conn.query('select * from pets INNER JOIN users ON pets.users_id = users.id  WHERE users.id = ?', id)
     return findImages(results)
   }
 
@@ -51,10 +58,46 @@ const init = connection => {
 
   const findAll = async() => {
     const conn = await connection
-    const [results] = await conn.query('select * from pets INNER JOIN users ON pets.users_id = users.id')
+    const [results] = await conn.query('select * from pets INNER JOIN users ON pets.users_id = users.id ')
     return findImages(results)
   }
-  
+
+  const findAllPaginated = async({ PageSize = 9, currentPage = 0 }  = {}) => {
+    const conn = await connection
+    const [results] =  await conn.query( `select * from pets INNER JOIN users ON pets.users_id = users.id limit ${currentPage*PageSize},${PageSize+1}`)
+    const hasNext = results.length > PageSize
+
+    if(results.length > PageSize) {
+      results.pop()
+    }
+    const resultsWithImages =  await findImages(results)
+
+    return {
+      data: resultsWithImages,
+      hasNext
+    }
+  }
+  const findAllPaginatedByType = async({ PageSize = 9, currentPage = 0 }  = {}, type) => {
+    const conn = await connection
+    const [results] =  await conn.query( `select * from pets INNER JOIN users ON pets.users_id = users.id WHERE animal_type = ? limit ${currentPage*PageSize},${PageSize+1}`, type)
+    const hasNext = results.length > PageSize
+
+    if(results.length > PageSize) {
+      results.pop()
+    }
+    const resultsWithImages =  await findImages(results)
+
+    return {
+      data: resultsWithImages,
+      hasNext
+    }
+  }
+
+const findUrlById = async(id) => {
+  const conn = await connection
+  const [results] = await conn.query('SELECT url FROM images WHERE pets_id = ?', [id])
+  return results
+}
 
   const addImage = async(pets_id, data) => {
     const conn = await connection
@@ -74,7 +117,11 @@ const init = connection => {
     findAll,
     findById,
     findByEmail,
-    addImage
+    addImage,
+    updateLike,
+    findAllPaginated,
+    findUrlById,
+    findAllPaginatedByType
   }
 }
 

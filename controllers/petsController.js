@@ -6,19 +6,54 @@ require('dotenv').config()
 
 
 const remove = async (req, res) => {
-  await Pets.remove(req.params.id)
-  res.send({
-  success: true
-})
-}
+    const id = req.params.id
+    const url = await Pets.findUrlById(id)
+    const key = url[0].url.split('com/')[1]
+    const s3Params = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: `${key}`
+    }
+    try{
+      if(url){
+        await s3.deleteObject(s3Params).promise()
+      }
+      await Pets.remove(id)
+      res.send({
+      success: true
+      })
+      return true
+    }catch(err){
+      return false
+    }
+    
+    }
 
+// const removeImage = async (req, res) => {
+//   const petsByEmail = await Pets.findByEmail(user_email)
+//   const s3Params = {
+//     Bucket: process.env.AWS_BUCKET_NAME,
+//     Key: `${user_email}-${myFile}`
+//   }
+//   try{
+//     await s3.deleteObject(s3Params).promise()
+    
+//     await Pets.removeImage(req.params.petsId,req.params.id)
+//       res.send({
+//       success: true
+//     })
+//     return true
+//   }catch(err){
+//     return false
+//   }
+
+  
+// }
 const removeImage = async (req, res) => {
   await Pets.removeImage(req.params.petsId,req.params.id)
   res.send({
   success: true
 })
 }
-
 
   const put = async (req, res) => {
     const { pet_name, pet_age, animal_type, description } = req.body
@@ -43,9 +78,29 @@ const removeImage = async (req, res) => {
     })
   }
 
+  const updateLike = async (req, res) => {
+    const id = req.params.id
+    const likes = req.body
+    await Pets.updateLike(id, likes)
+    return res.send({
+      data: likes
+    })
+  }
 
+const getLikes = async(req, res) => {
+  const likes = await Pets.findLikesByPetId(req.params.id_pet) 
+  res.send(likes)
+}
 const getAll = async (req, res) => {
-  const pets = await Pets.findAll()
+  const current = req.params.id
+  const pets = await Pets.findAllPaginated({currentPage: current})
+  res.send(pets)
+}
+
+const getByType = async (req, res) => {
+  const current = req.params.id
+  const type = req.params.type
+  const pets = await Pets.findAllPaginatedByType({currentPage: current}, type)
   res.send(pets)
 }
 
@@ -55,7 +110,7 @@ const getAll = async (req, res) => {
     const headerParts = header.split(' ')
     const payload = jwt.verify(headerParts[1], secret)
     const users_id = payload.id[0].id
-    console.log(users_id)
+    
     const pets = await Pets.findById(users_id)
     res.send(pets)
   }
@@ -72,6 +127,7 @@ const getByEmail = async (req, res) => {
 
 
 const uploadImage = async (req, res) => {
+  let i = 0
   const myFile = req.file.originalname
   const secret = process.env.JWT_SECRET
   const header = req.headers.authorization
@@ -80,12 +136,12 @@ const uploadImage = async (req, res) => {
   const user_email = payload.email
   const params = {
     Bucket: process.env.AWS_BUCKET_NAME,
-    Key: `${user_email}-${myFile}`,
+    Key: `${user_email}-${i+1}-${myFile}`,
     ACL: 'public-read',
     ContentType: req.file.mimetype,
     Body: req.file.buffer
   }
-  const url = `https://petsjaragua.s3.amazonaws.com/${user_email}-${myFile}`
+  const url = `https://petsjaragua.s3.amazonaws.com/${user_email}-${i++}-${myFile}`
   await Pets.addImage(req.params.id, [url])
   s3.upload(params, (error, data) => {
     if(error){
@@ -100,11 +156,14 @@ const uploadImage = async (req, res) => {
 
 module.exports = {
   remove,
+  getLikes,
   removeImage,
   put,
   create,
   uploadImage,
   getAll,
   getByEmail,
-  getById
+  updateLike,
+  getById,
+  getByType
 }

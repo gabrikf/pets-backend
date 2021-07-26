@@ -9,6 +9,8 @@ router.post('/login', userController.authUser)
 
 router.get('/usuarios', userController.returnUser)
 
+router.get('/:email', userController.findByEmail)
+
 router.get('/:id', userController.returnById)
 
 router.put('/:id', userController.updateUser)

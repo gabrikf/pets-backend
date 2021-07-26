@@ -25,6 +25,11 @@ const returnUser = async (req, res) => {
   res.send(user)
 }
 
+const returnUserEmail = async (req, res) => {
+  const user = await User.findByEmail(req.params.email)
+  res.send(user)
+}
+
 const returnById = async (req, res) => {
   const user = await User.findById(req.params.id)
   res.send(user)
@@ -58,7 +63,7 @@ const authUser = async (req, res) => {
     array.push(object.passwd)
   }
   const pass = array[0]
-  if(bcrypt.compareSync(passwd, pass)){
+  try {(bcrypt.compareSync(passwd, pass))
     const token = jwt.sign({
       id,
       email
@@ -67,16 +72,20 @@ const authUser = async (req, res) => {
       success: true,
       token
     })
-  }
-    res.send({
+  } catch(e) {
+    return res.send({
+      error:  {messege: 'wrong credentials.'},
       success: false,
-      messege: 'wrong credentials.'
+     
     })
+  }
   }
 
 
 module.exports = {
+
   create: createUser,
+  findByEmail: returnUserEmail,
   returnUser: returnUser,
   returnById: returnById,
   updateUser: updateUser,

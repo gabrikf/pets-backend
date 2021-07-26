@@ -8,7 +8,13 @@ const init = connection => {
 
   const findById = async(id) => {
     const conn = await connection
-    const [results] = await conn.query('select * from users where id = ' + id)
+    const [results] = await conn.query('select * from users where id = ?' + id)
+    return results
+  }
+
+  const findByEmail = async(email) => {
+    const conn = await connection
+    const [results] = await conn.query('select * from users where email = ?', [email])
     return results
   }
 
@@ -43,6 +49,7 @@ const init = connection => {
     create,
     findAll,
     findById,
+    findByEmail,
     findPassByEmail: findPassByEmail,
     findPassByEmailId,
     update,

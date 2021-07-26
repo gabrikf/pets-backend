@@ -4,12 +4,14 @@ const users = require('./users')
 const pets = require('./pets')
 const petsController = require('../controllers/petsController')
 
+router.put('/pets/:id', petsController.updateLike)
 
 router.use('/users', users)
 
 router.use('/pets', pets)
 
-router.get('/', petsController.getAll)
+router.get('/:id', petsController.getAll)
 
+router.get('/:type/:id', petsController.getByType)
 
 module.exports = router
