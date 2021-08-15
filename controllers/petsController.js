@@ -127,21 +127,23 @@ const getByEmail = async (req, res) => {
 
 
 const uploadImage = async (req, res) => {
-  let i = 0
   const myFile = req.file.originalname
   const secret = process.env.JWT_SECRET
   const header = req.headers.authorization
   const headerParts = header.split(' ')
   const payload = jwt.verify(headerParts[1], secret)
   const user_email = payload.email
+  const date = new Date
+  const stringDate = String(date).split(' ').join('_')
+  console.log(stringDate)
   const params = {
     Bucket: process.env.AWS_BUCKET_NAME,
-    Key: `${user_email}-${i+1}-${myFile}`,
+    Key: `${user_email}-${myFile}-${stringDate}`,
     ACL: 'public-read',
     ContentType: req.file.mimetype,
     Body: req.file.buffer
   }
-  const url = `https://petsjaragua.s3.amazonaws.com/${user_email}-${i++}-${myFile}`
+  const url = `https://petsjaragua.s3.amazonaws.com/${params.Key}`
   await Pets.addImage(req.params.id, [url])
   s3.upload(params, (error, data) => {
     if(error){
