@@ -2,10 +2,11 @@ const db = require('../db')
 const Pets = require('../models/pets')(db)
 const jwt = require('jsonwebtoken')
 const s3 = require('../utils/s3')
+const { response } = require('express')
 require('dotenv').config()
 
 
-const remove = async (req, res) => {
+const removeWithImage = async (req, res) => {
     const id = req.params.id
     const url = await Pets.findUrlById(id)
     const key = url[0].url.split('com/')[1]
@@ -28,26 +29,12 @@ const remove = async (req, res) => {
     
     }
 
-// const removeImage = async (req, res) => {
-//   const petsByEmail = await Pets.findByEmail(user_email)
-//   const s3Params = {
-//     Bucket: process.env.AWS_BUCKET_NAME,
-//     Key: `${user_email}-${myFile}`
-//   }
-//   try{
-//     await s3.deleteObject(s3Params).promise()
-    
-//     await Pets.removeImage(req.params.petsId,req.params.id)
-//       res.send({
-//       success: true
-//     })
-//     return true
-//   }catch(err){
-//     return false
-//   }
-
-  
-// }
+    const remove = async (req, res) => {
+      await Pets.remove(req.params.id)
+      res.send({
+      success: true
+    })
+    }
 const removeImage = async (req, res) => {
   await Pets.removeImage(req.params.petsId,req.params.id)
   res.send({
@@ -153,11 +140,18 @@ const uploadImage = async (req, res) => {
   })
 }
 
+const authorized = async(req, res) => {
+  res.send({
+    messege: 'authorizated'
+  })
+}
 
 
 
 module.exports = {
   remove,
+  authorized,
+  removeWithImage,
   getLikes,
   removeImage,
   put,

@@ -12,11 +12,13 @@ router.post('/', petsController.create)
 
 router.delete('/:id', petsController.remove)
 
+router.delete('/image/:id', petsController.removeWithImage)
+
 router.put('/:id', petsController.put)
 
 router.get('/', petsController.getById)
 
-// router.get('/', petsController.getByEmail)
+router.get('/auth', petsController.authorized)
 
 router.post('/:id/upload', upload, petsController.uploadImage)
 
