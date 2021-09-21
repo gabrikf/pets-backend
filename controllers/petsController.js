@@ -9,7 +9,8 @@ require('dotenv').config()
 const removeWithImage = async (req, res) => {
     const id = req.params.id
     const url = await Pets.findUrlById(id)
-    const key = url[0].url.split('com/')[1]
+    let key = url[0].url.split('com/')[1]
+    key = decodeURIComponent(key)
     const s3Params = {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: `${key}`
@@ -130,7 +131,7 @@ const uploadImage = async (req, res) => {
     ContentType: req.file.mimetype,
     Body: req.file.buffer
   }
-  const url = `https://petsjaragua.s3.amazonaws.com/${params.Key}`
+  const url = `https://petsjaragua.s3.amazonaws.com/${encodeURIComponent(params.Key)}`
   await Pets.addImage(req.params.id, [url])
   s3.upload(params, (error, data) => {
     if(error){
