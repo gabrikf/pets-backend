@@ -78,7 +78,7 @@ const init = connection => {
 
   const findByOngIdPaginated = async({ PageSize = 9, currentPage = 0 }  = {}, id) => {
     const conn = await connection
-    const [results] =  await conn.query( `select * from pets INNER JOIN users ON pets.users_id = users.id limit ${currentPage*PageSize},${PageSize+1} WHERE id = ?`, id)
+    const [results] =  await conn.query( `select * from pets INNER JOIN users ON pets.users_id = users.id WHERE id = ? limit ${currentPage*PageSize},${PageSize+1} `, id)
     const hasNext = results.length > PageSize
 
     if(results.length > PageSize) {

@@ -130,8 +130,7 @@ const getByEmail = async (req, res) => {
 const getByOngId = async (req, res) => {
     const ongid = req.params.ongid
     const current = req.params.id
-    const type = req.params.type
-    const pets = await Pets.findByOngIdPaginated({currentPage: current}, type, ongid)
+    const pets = await Pets.findByOngIdPaginated({currentPage: current}, ongid)
     res.send(pets)
 }
 
