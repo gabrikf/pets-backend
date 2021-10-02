@@ -17,6 +17,6 @@ router.patch('/:id', userController.updateUserRole)
 
 router.delete('/:id', userController.deleteUser)
 
-router.get('/ongs', userController.returnOngs)
+router.get('/return/ongs', userController.returnOngs)
 
 module.exports = router

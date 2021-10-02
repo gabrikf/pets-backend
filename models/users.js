@@ -37,7 +37,8 @@ const init = connection => {
   }
   const findOngs = async() => {
     const conn = await connection
-    const [results] = await conn.query('select id, name from users where role = ong')
+    const role = 'ong'
+    const [results] = await conn.query('select id, name from users where role = ?', role)
     return results
   }
   
