@@ -65,7 +65,22 @@ const removeImage = async (req, res) => {
       data : req.body
     })
   }
-
+const deleteLike = async (req, res) => {
+  const userId = req.params.id
+  const { petId } = req.body
+  await Pets.disLike(userId, petId)
+  return res.send({
+    messege: 'success'
+  })
+}
+const createLike = async(req, res) => {
+  const userId = req.params.id
+  const { petId } = req.body
+  await Pets.like(userId, petId)
+  return res.send({
+    messege: 'success'
+  })
+}
   const updateLike = async (req, res) => {
     const id = req.params.id
     const likes = req.body
@@ -162,5 +177,7 @@ module.exports = {
   getByEmail,
   updateLike,
   getById,
+  deleteLike,
+  createLike,
   getByType
 }

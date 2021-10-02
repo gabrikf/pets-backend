@@ -21,6 +21,16 @@ const init = connection => {
     return conn.query('update pets set likes = ? where id_pet=?', [data, id])
   }
 
+  const like = async(userId, petId) => {
+    const conn = await connection
+    return conn.query('INSERT INTO likes (userId, petId) VALUES (?, ?)',[userId, petId])
+  }
+
+  const disLike = async(userId, petId) => {
+    const conn = await connection
+    return conn.query('DELETE FROM likes where userId = ? AND petId = ?',[userId, petId])
+  }
+
   const findImages = async(results) => {
     if (results.length === 0) {
       return []
@@ -118,6 +128,8 @@ const findUrlById = async(id) => {
     findById,
     findByEmail,
     addImage,
+    like,
+    disLike,
     updateLike,
     findAllPaginated,
     findUrlById,

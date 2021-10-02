@@ -13,9 +13,10 @@ router.get('/:email', userController.findByEmail)
 
 router.get('/:id', userController.returnById)
 
-router.put('/:id', userController.updateUser)
+router.patch('/:id', userController.updateUserRole)
 
 router.delete('/:id', userController.deleteUser)
 
+router.get('/ongs', userController.returnOngs)
 
 module.exports = router

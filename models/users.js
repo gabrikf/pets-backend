@@ -35,15 +35,20 @@ const init = connection => {
     const [results] = await conn.query('select * from users')
     return results
   }
+  const findOngs = async() => {
+    const conn = await connection
+    const [results] = await conn.query('select id, name from users where role = ong')
+    return results
+  }
   
   const remove = async(id) => {
     const conn = await connection
     await conn.query('delete from users where id=? limit 1', [id])
   }
 
-  const update = async(id, data) => {
+  const updateRole = async(id, role) => {
     const conn = await connection
-    await conn.query('update users set name = ?, email = ?, whatsapp = ?, city = ?, state = ?, neighborhood = ? where id=?', [...data, id])
+    await conn.query('update users set role = ?where id=?', [role, id])
   }
   return{
     create,
@@ -52,7 +57,8 @@ const init = connection => {
     findByEmail,
     findPassByEmail: findPassByEmail,
     findPassByEmailId,
-    update,
+    updateRole,
+    findOngs,
     remove
   }
 }

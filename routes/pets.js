@@ -22,7 +22,12 @@ router.get('/auth', petsController.authorized)
 
 router.post('/:id/upload', upload, petsController.uploadImage)
 
+router.post('/likes/:id', petsController.createLike)
+
 router.delete('/:petsId/images/:id', petsController.removeImage)
+
+router.delete('/likes/:id', petsController.deleteLike)
+
 
 
 module.exports = router

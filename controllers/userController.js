@@ -18,8 +18,10 @@ const createUser = async (req, res) => {
   })
 
 }
-
-
+const returnOngs = async (req, res) => {
+  const user = await User.findOngs()
+  res.send(user)
+}
 const returnUser = async (req, res) => {
   const user = await User.findAll()
   res.send(user)
@@ -35,10 +37,9 @@ const returnById = async (req, res) => {
   res.send(user)
 }
 
-const updateUser = async (req, res) => {
-  //alterar produtos
-  const { name, email, whatsapp, city, state, neighborhood } = req.body
-  await User.update(req.params.id, [name, email, whatsapp, city, state, neighborhood])
+const updateUserRole = async (req, res) => {
+  const { role } = req.body
+  await User.updateRole(req.params.id, [role])
   res.send({
     success: true,
     data : req.body
@@ -88,7 +89,8 @@ module.exports = {
   findByEmail: returnUserEmail,
   returnUser: returnUser,
   returnById: returnById,
-  updateUser: updateUser,
+  updateUserRole,
   deleteUser: deleteUser,
-  authUser: authUser
+  authUser: authUser,
+  returnOngs
 }
