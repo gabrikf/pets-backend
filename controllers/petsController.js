@@ -67,7 +67,7 @@ const removeImage = async (req, res) => {
   }
 const deleteLike = async (req, res) => {
   const userId = req.params.id
-  const { petId } = req.body
+  const petId = req.params.petId
   await Pets.disLike(userId, petId)
   return res.send({
     messege: 'success'
@@ -75,7 +75,7 @@ const deleteLike = async (req, res) => {
 }
 const createLike = async(req, res) => {
   const userId = req.params.id
-  const { petId } = req.body
+  const petId = req.params.petId
   await Pets.like(userId, petId)
   return res.send({
     messege: 'success'
@@ -94,6 +94,7 @@ const getLikes = async(req, res) => {
   const likes = await Pets.findLikesByPetId(req.params.id_pet) 
   res.send(likes)
 }
+
 const getAll = async (req, res) => {
   const current = req.params.id
   const pets = await Pets.findAllPaginated({currentPage: current})
@@ -115,6 +116,12 @@ const getByType = async (req, res) => {
     const users_id = payload.id[0].id
     
     const pets = await Pets.findById(users_id)
+    res.send(pets)
+  }
+
+  const getByLike = async (req, res) => {
+    const user_id = req.params.id
+    const pets = await Pets.findByLikes(user_id)
     res.send(pets)
   }
 
@@ -177,6 +184,7 @@ module.exports = {
   getLikes,
   removeImage,
   put,
+  getByLike,
   create,
   uploadImage,
   getAll,

@@ -18,15 +18,17 @@ router.put('/:id', petsController.put)
 
 router.get('/', petsController.getById)
 
+router.get('/likes/:id', petsController.getByLike)
+
 router.get('/auth', petsController.authorized)
 
 router.post('/:id/upload', upload, petsController.uploadImage)
 
-router.post('/likes/:id', petsController.createLike)
+router.post('/likes/:id/:petId', petsController.createLike)
 
 router.delete('/:petsId/images/:id', petsController.removeImage)
 
-router.delete('/likes/:id', petsController.deleteLike)
+router.delete('/likes/:id/:petId', petsController.deleteLike)
 
 
 

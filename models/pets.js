@@ -69,6 +69,11 @@ const init = connection => {
     const [results] = await conn.query('select * from pets where id= ?',ong_id)
     return findImages(results)
   }
+  const findByLikes = async(user_id) => {
+    const conn = await connection
+    const [results] = await conn.query('SELECT * from likes l inner join pets on id_pet = l.petId where l.userId = ?',user_id)
+    return findImages(results)
+  }
 
   const findAll = async() => {
     const conn = await connection
@@ -154,6 +159,7 @@ const findUrlById = async(id) => {
     findAllPaginated,
     findUrlById,
     findByOngIdPaginated,
+    findByLikes,
     findAllPaginatedByType
   }
 }
