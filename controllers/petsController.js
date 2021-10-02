@@ -127,6 +127,13 @@ const getByEmail = async (req, res) => {
     const petsByEmail = await Pets.findByEmail(user_email)
     res.send(petsByEmail)
 }
+const getByOngId = async (req, res) => {
+    const ongid = req.params.id
+    const current = req.params.id
+    const type = req.params.type
+    const pets = await Pets.findByOngIdPaginated({currentPage: current}, type, ongid)
+    res.send(pets)
+}
 
 
 const uploadImage = async (req, res) => {
@@ -178,6 +185,7 @@ module.exports = {
   updateLike,
   getById,
   deleteLike,
+  getByOngId,
   createLike,
   getByType
 }

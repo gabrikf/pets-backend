@@ -64,12 +64,32 @@ const init = connection => {
     const [results] = await conn.query('select * from pets where user_email = ?',user_email)
     return findImages(results)
   }
-
+  const findByOngId = async(ong_id) => {
+    const conn = await connection
+    const [results] = await conn.query('select * from pets where id= ?',ong_id)
+    return findImages(results)
+  }
 
   const findAll = async() => {
     const conn = await connection
     const [results] = await conn.query('select * from pets INNER JOIN users ON pets.users_id = users.id ')
     return findImages(results)
+  }
+
+  const findByOngIdPaginated = async({ PageSize = 9, currentPage = 0 }  = {}, id) => {
+    const conn = await connection
+    const [results] =  await conn.query( `select * from pets INNER JOIN users ON pets.users_id = users.id limit ${currentPage*PageSize},${PageSize+1} WHERE id = ?`, id)
+    const hasNext = results.length > PageSize
+
+    if(results.length > PageSize) {
+      results.pop()
+    }
+    const resultsWithImages =  await findImages(results)
+
+    return {
+      data: resultsWithImages,
+      hasNext
+    }
   }
 
   const findAllPaginated = async({ PageSize = 9, currentPage = 0 }  = {}) => {
@@ -133,6 +153,7 @@ const findUrlById = async(id) => {
     updateLike,
     findAllPaginated,
     findUrlById,
+    findByOngIdPaginated,
     findAllPaginatedByType
   }
 }

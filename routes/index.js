@@ -14,4 +14,6 @@ router.get('/:id', petsController.getAll)
 
 router.get('/:type/:id', petsController.getByType)
 
+router.get('/ongs/:type/:id/:ongid', petsController.getByType)
+
 module.exports = router
