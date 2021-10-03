@@ -69,10 +69,20 @@ const init = connection => {
     const [results] = await conn.query('select * from pets where id= ?',ong_id)
     return findImages(results)
   }
-  const findByLikes = async(user_id) => {
+  const findByLikes =  async({ PageSize = 9, currentPage = 0 }  = {},userId) => {
     const conn = await connection
-    const [results] = await conn.query('SELECT * from likes inner join pets on id_pet = petId where userId = ?',user_id)
-    return findImages(results)
+    const [results] = await conn.query(`SELECT * from likes inner join pets on id_pet = petId where userId = ? limit ${currentPage*PageSize},${PageSize+1}`,userId)
+    const hasNext = results.length > PageSize
+
+    if(results.length > PageSize) {
+      results.pop()
+    }
+    const resultsWithImages =  await findImages(results)
+
+    return {
+      data: resultsWithImages,
+      hasNext
+    }
   }
 
   const findAll = async() => {

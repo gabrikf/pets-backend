@@ -66,7 +66,11 @@ const removeImage = async (req, res) => {
     })
   }
 const deleteLike = async (req, res) => {
-  const userId = req.params.id
+  const secret = process.env.JWT_SECRET
+  const header = req.headers.authorization
+  const headerParts = header.split(' ')
+  const payload = jwt.verify(headerParts[1], secret)
+  const userId = payload.id[0].id
   const petId = req.params.petId
   await Pets.disLike(userId, petId)
   return res.send({
@@ -74,7 +78,11 @@ const deleteLike = async (req, res) => {
   })
 }
 const createLike = async(req, res) => {
-  const userId = req.params.id
+  const secret = process.env.JWT_SECRET
+  const header = req.headers.authorization
+  const headerParts = header.split(' ')
+  const payload = jwt.verify(headerParts[1], secret)
+  const userId = payload.id[0].id
   const petId = req.params.petId
   await Pets.like(userId, petId)
   return res.send({
@@ -120,8 +128,13 @@ const getByType = async (req, res) => {
   }
 
   const getByLike = async (req, res) => {
-    const user_id = req.params.id
-    const pets = await Pets.findByLikes(user_id)
+    const current = req.params.page
+    const secret = process.env.JWT_SECRET
+    const header = req.headers.authorization
+    const headerParts = header.split(' ')
+    const payload = jwt.verify(headerParts[1], secret)
+    const users_id = payload.id[0].id
+    const pets = await Pets.findByLikes({currentPage: current},users_id)
     res.send(pets)
   }
 
