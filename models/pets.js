@@ -71,7 +71,7 @@ const init = connection => {
   }
   const findByLikes =  async({ PageSize = 9, currentPage = 0 }  = {},userId) => {
     const conn = await connection
-    const [results] = await conn.query(`SELECT * from likes inner join pets on id_pet = petId where userId = ? limit ${currentPage*PageSize},${PageSize+1}`,userId)
+    const [results] = await conn.query(`SELECT * from likes inner join pets on id_pet = petId INNER JOIN users ON pets.users_id = users.id where userId = ? limit ${currentPage*PageSize},${PageSize+1}`,userId)
     const hasNext = results.length > PageSize
 
     if(results.length > PageSize) {
