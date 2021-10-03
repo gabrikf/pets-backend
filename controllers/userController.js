@@ -74,7 +74,9 @@ const authUser = async (req, res) => {
     }, secret, { expiresIn: '2 days'})
     return res.send({
       success: true,
-      token
+      token,
+      id,
+      role,
     })
   } catch(e) {
     return res.send({
