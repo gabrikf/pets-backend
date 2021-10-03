@@ -59,6 +59,12 @@ const init = connection => {
     return findImages(results)
   }
 
+  const findByPetId = async(id) => {
+    const conn = await connection
+    const [results] = await conn.query('select * from pets INNER JOIN users ON pets.users_id = users.id  WHERE pets.id_pet = ?', id)
+    return findImages(results)
+  }
+
   const findByEmail = async(user_email) => {
     const conn = await connection
     const [results] = await conn.query('select * from pets where user_email = ?',user_email)
@@ -162,6 +168,7 @@ const findUrlById = async(id) => {
     findAll,
     findById,
     findByEmail,
+    findByPetId,
     addImage,
     like,
     disLike,

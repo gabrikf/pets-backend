@@ -116,6 +116,12 @@ const getByType = async (req, res) => {
   res.send(pets)
 }
 
+const getByPetId = async (req, res) => {
+  const id = req.params.id
+  const pets = await Pets.findByPetId(id)
+  res.send(pets)
+}
+
   const getById = async (req, res) => {
     const secret = process.env.JWT_SECRET
     const header = req.headers.authorization
@@ -196,6 +202,7 @@ module.exports = {
   getLikes,
   removeImage,
   put,
+  getByPetId,
   getByLike,
   create,
   uploadImage,

@@ -12,6 +12,8 @@ router.use('/pets', pets)
 
 router.get('/:id', petsController.getAll)
 
+router.get('/details/:id', petsController.getByPetId)
+
 router.get('/:type/:id', petsController.getByType)
 
 router.get('/ongs/:id/:ongid', petsController.getByOngId)
