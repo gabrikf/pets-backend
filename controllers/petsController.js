@@ -58,7 +58,7 @@ const removeImage = async (req, res) => {
     const headerParts = header.split(' ')
     const payload = jwt.verify(headerParts[1], secret)
     const user_email = payload.email
-    const users_id = payload.id[0].id
+    const users_id = payload.id
     await Pets.create([users_id, user_email, pet_name, pet_age, animal_type, description])
     res.send({
       success: true,
@@ -70,7 +70,7 @@ const deleteLike = async (req, res) => {
   const header = req.headers.authorization
   const headerParts = header.split(' ')
   const payload = jwt.verify(headerParts[1], secret)
-  const userId = payload.id[0].id
+  const userId = payload.id
   const petId = req.params.petId
   await Pets.disLike(userId, petId)
   return res.send({
@@ -82,7 +82,7 @@ const createLike = async(req, res) => {
   const header = req.headers.authorization
   const headerParts = header.split(' ')
   const payload = jwt.verify(headerParts[1], secret)
-  const userId = payload.id[0].id
+  const userId = payload.id
   const petId = req.params.petId
   await Pets.like(userId, petId)
   return res.send({
@@ -121,7 +121,7 @@ const getByType = async (req, res) => {
     const header = req.headers.authorization
     const headerParts = header.split(' ')
     const payload = jwt.verify(headerParts[1], secret)
-    const users_id = payload.id[0].id
+    const users_id = payload.id
     const pets = await Pets.findById(users_id)
     res.send(pets)
   }
@@ -132,7 +132,7 @@ const getByType = async (req, res) => {
     const header = req.headers.authorization
     const headerParts = header.split(' ')
     const payload = jwt.verify(headerParts[1], secret)
-    const users_id = payload.id[0].id
+    const users_id = payload.id
     const pets = await Pets.findByLikes({currentPage: current},users_id)
     res.send(pets)
   }
