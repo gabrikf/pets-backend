@@ -91,6 +91,7 @@ const init = connection => {
     }
   }
 
+
   const findAll = async() => {
     const conn = await connection
     const [results] = await conn.query('select * from pets INNER JOIN users ON pets.users_id = users.id ')

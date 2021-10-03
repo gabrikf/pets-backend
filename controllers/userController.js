@@ -18,12 +18,30 @@ const createUser = async (req, res) => {
   })
 
 }
+const createOngUser= async (req, res) => {
+  const { message } = req.body
+  const secret = process.env.JWT_SECRET
+  const header = req.headers.authorization
+  const headerParts = header.split(' ')
+  const payload = jwt.verify(headerParts[1], secret)
+  const ongId = payload.id
+  const user = await User.createSolicitation(ongId, message)
+  res.send({
+    success: true,
+    data : user
+  })
+
+}
 const returnOngs = async (req, res) => {
   const user = await User.findOngs()
   res.send(user)
 }
 const returnUser = async (req, res) => {
   const user = await User.findAll()
+  res.send(user)
+}
+const returnSolicitations = async (req, res) => {
+  const user = await User.findSolicitations()
   res.send(user)
 }
 
@@ -51,6 +69,13 @@ const deleteUser = async (req, res) => {
   res.send({
   success: true
 })
+}
+const deleteUserSolicitation = async (req, res) => {
+const ongId = req.params.id
+  await User.removeuserSolicitation(ongId)
+  return res.send({
+    messege: 'success'
+  })
 }
 
 const secret = process.env.JWT_SECRET
@@ -95,7 +120,10 @@ module.exports = {
   returnUser: returnUser,
   returnById: returnById,
   updateUserRole,
+  deleteUserSolicitation,
+  returnSolicitations,
   deleteUser: deleteUser,
   authUser: authUser,
+  createOngUser,
   returnOngs
 }
