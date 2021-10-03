@@ -122,7 +122,6 @@ const getByType = async (req, res) => {
     const headerParts = header.split(' ')
     const payload = jwt.verify(headerParts[1], secret)
     const users_id = payload.id[0].id
-    
     const pets = await Pets.findById(users_id)
     res.send(pets)
   }
