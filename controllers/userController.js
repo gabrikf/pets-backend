@@ -57,7 +57,9 @@ const secret = process.env.JWT_SECRET
 const authUser = async (req, res) => {
   const { email, passwd } = req.body
     
-  const id = await User.findPassByEmailId(email)
+  const credentials = await User.findPassByEmailId(email)
+  const id = credentials[0].id
+  const role = credentials[0].role
   const userPass = await User.findPassByEmail(email)
   const array = []
   for(const object of userPass){
@@ -67,6 +69,7 @@ const authUser = async (req, res) => {
   try {(bcrypt.compareSync(passwd, pass))
     const token = jwt.sign({
       id,
+      role,
       email
     }, secret, { expiresIn: '2 days'})
     return res.send({

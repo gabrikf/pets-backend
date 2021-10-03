@@ -71,7 +71,7 @@ const init = connection => {
   }
   const findByLikes = async(user_id) => {
     const conn = await connection
-    const [results] = await conn.query('SELECT * from likes l inner join pets on id_pet = l.petId where l.userId = ?',user_id)
+    const [results] = await conn.query('SELECT * from likes inner join pets on id_pet = petId where userId = ?',user_id)
     return findImages(results)
   }
 

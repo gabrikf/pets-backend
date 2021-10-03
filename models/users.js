@@ -25,7 +25,7 @@ const init = connection => {
   }
   const findPassByEmailId = async(email) => {
     const conn = await connection
-    const [results] = await conn.query('select id from users where email = ?', [email])
+    const [results] = await conn.query('select id, role from users where email = ?', [email])
     return results
   }
 
