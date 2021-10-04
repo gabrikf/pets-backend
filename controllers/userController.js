@@ -44,6 +44,16 @@ const returnSolicitations = async (req, res) => {
   const user = await User.findSolicitations()
   res.send(user)
 }
+const returnSolicitationsById = async (req, res) => {
+  const secret = process.env.JWT_SECRET
+  const header = req.headers.authorization
+  const headerParts = header.split(' ')
+  const payload = jwt.verify(headerParts[1], secret)
+  const ongId = payload.id
+  const user = await User.findSolicitationsById(ongId)
+  res.send(user)
+}
+
 
 const returnUserEmail = async (req, res) => {
   const user = await User.findByEmail(req.params.email)
@@ -122,6 +132,7 @@ module.exports = {
   updateUserRole,
   deleteUserSolicitation,
   returnSolicitations,
+  returnSolicitationsById,
   deleteUser: deleteUser,
   authUser: authUser,
   createOngUser,

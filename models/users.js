@@ -17,6 +17,11 @@ const init = connection => {
     const [results] = await conn.query(`SELECT * from ongSolicitation inner join users on ongSolicitation.ongId = users.id `)
     return results
   }
+  const findSolicitationsById =  async(userId) => {
+    const conn = await connection
+    const [results] = await conn.query(`SELECT * from ongSolicitation where ongId = ?`, id)
+    return results
+  }
 
   const findByEmail = async(email) => {
     const conn = await connection
@@ -71,6 +76,7 @@ const init = connection => {
     findPassByEmail: findPassByEmail,
     findPassByEmailId,
     updateRole,
+    findSolicitationsById,
     createSolicitation,
     removeuserSolicitation,
     findOngs,

@@ -24,6 +24,8 @@ router.post('/ongs/solicitation',needsAuth , userController.createOngUser)
 
 router.get('/ongs/solicitation',needsAuthSuperUser , userController.returnSolicitations)
 
+router.get('/ongs/solicitationid',needsAuth , userController.returnSolicitationsById)
+
 router.delete('/ongs/solicitation/:id',needsAuthSuperUser , userController.deleteUserSolicitation)
 
 
