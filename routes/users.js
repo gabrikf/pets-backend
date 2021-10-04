@@ -20,7 +20,7 @@ router.delete('/:id', userController.deleteUser)
 
 router.get('/return/ongs', userController.returnOngs)
 
-router.post('/ongs/solicitation',needsAuthOng , userController.createOngUser)
+router.post('/ongs/solicitation',needsAuth , userController.createOngUser)
 
 router.get('/ongs/solicitation',needsAuthSuperUser , userController.returnSolicitations)
 
