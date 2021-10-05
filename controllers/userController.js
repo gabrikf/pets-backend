@@ -114,7 +114,7 @@ const authUser = async (req, res) => {
       role,
     })
   } catch(e) {
-    return res.send({
+    return res.status(404).send({
       error:  {messege: 'wrong credentials.'},
       success: false,
      
