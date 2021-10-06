@@ -131,7 +131,7 @@ const init = connection => {
   }
   const findAllPaginatedByType = async({ PageSize = 9, currentPage = 0 }  = {}, type) => {
     const conn = await connection
-    const [results] =  await conn.query( `select * from pets INNER JOIN users ON pets.users_id = users.id WHERE animal_type = ? limit ${currentPage*PageSize},${PageSize+1}`, type)
+    const [results] =  await conn.query( `select * from pets INNER JOIN users ON pets.users_id = users.id WHERE animal_type = ? ORDER BY RAND() limit ${currentPage*PageSize},${PageSize+1}`, type)
     const hasNext = results.length > PageSize
 
     if(results.length > PageSize) {
