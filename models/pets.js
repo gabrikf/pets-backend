@@ -2,7 +2,7 @@ const init = connection => {
   const create = async(data) => {
     const conn = await connection
     data.push(JSON.stringify({}))
-    await conn.query('insert into pets (users_id, user_email, pet_name, pet_age, animal_type, breed, description, likes) values (?, ?, ?, ?, ?, ?, ?, ?)',data)
+    await conn.query('insert into pets (users_id, user_email, pet_name, pet_age, animal_type, genre, size, description, likes) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',data)
   }
 
   const remove = async(id) => {

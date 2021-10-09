@@ -1,4 +1,4 @@
-const up = async(connection) => {
+const up = async (connection) => {
   await connection.query(`
     CREATE TABLE users (
       id INT NOT NULL AUTO_INCREMENT,
@@ -9,16 +9,18 @@ const up = async(connection) => {
       city VARCHAR(250) NULL DEFAULT NULL,
       state VARCHAR(250) NULL DEFAULT NULL,
       neighborhood VARCHAR(100) NULL DEFAULT NULL,
+      role VARCHAR(25) NULL DEFAULT 'User',
       PRIMARY KEY (id)
     )
-  `)
+  `);
   await connection.query(`
     CREATE TABLE pets (
       id_pet INT NOT NULL AUTO_INCREMENT,
       pet_name VARCHAR(250) NULL DEFAULT NULL,
       pet_age varchar(50) NULL DEFAULT NULL,
       animal_type VARCHAR(100) NOT NULL,
-      breed VARCHAR(50) NULL DEFAULT NULL,
+      genre VARCHAR(50) NULL DEFAULT NULL,
+      size VARCHAR(50) NULL DEFAULT NULL,
       likes TEXT NULL DEFAULT NULL,
       description VARCHAR(200) NULL DEFAULT NULL,
       user_email VARCHAR(100) NULL DEFAULT NULL,  
@@ -26,8 +28,25 @@ const up = async(connection) => {
       CONSTRAINT fk_pets_users_constraint FOREIGN KEY (users_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
       PRIMARY KEY (id_pet)
     )
-  `)
-
+  `);
+  await connection.query(`
+  CREATE TABLE likes (
+    userId INT NOT NULL,
+    petId INT NOT NULL,
+    PRIMARY KEY(userId, petId),
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (petId) REFERENCES pets(id_pet) ON DELETE CASCADE ON UPDATE CASCADE
+  )
+`);
+  await connection.query(`
+CREATE TABLE ongSolicitation (
+  id INT NOT NULL,
+  ongId INT NOT NULL,
+  message VARCHAR(250),
+  PRIMARY KEY(id),
+  FOREIGN KEY (ongId) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+)
+`);
   await connection.query(`
     CREATE TABLE images (
       id_img INT NOT NULL AUTO_INCREMENT,
@@ -37,22 +56,22 @@ const up = async(connection) => {
       KEY fk_images_pets_index (pets_id),
       CONSTRAINT fk_images_pets_constraint FOREIGN KEY (pets_id) REFERENCES pets(id_pet) ON DELETE CASCADE ON UPDATE CASCADE
     )
-  `)
-}
+  `);
+};
 
-const down = async(connection) => {
+const down = async (connection) => {
   await connection.query(`
     DROP TABLE users
-  `)
+  `);
   await connection.query(`
     DROP TABLE pets
-  `)
+  `);
   await connection.query(`
     DROP TABLE images
-  `)
-}
+  `);
+};
 
 module.exports = {
-  up, down
-}
-
+  up,
+  down,
+};
