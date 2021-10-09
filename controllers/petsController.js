@@ -52,14 +52,14 @@ const removeImage = async (req, res) => {
   }
 
   const create = async (req, res) => { 
-    const { pet_name, pet_age, animal_type, description } = req.body
+    const { pet_name, pet_age, animal_type, breed, description } = req.body
     const secret = process.env.JWT_SECRET
     const header = req.headers.authorization
     const headerParts = header.split(' ')
     const payload = jwt.verify(headerParts[1], secret)
     const user_email = payload.email
     const users_id = payload.id
-    await Pets.create([users_id, user_email, pet_name, pet_age, animal_type, description])
+    await Pets.create([users_id, user_email, pet_name, pet_age, animal_type, breed, description])
     res.send({
       success: true,
       data : req.body
