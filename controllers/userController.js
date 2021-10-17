@@ -101,18 +101,22 @@ const authUser = async (req, res) => {
     array.push(object.passwd)
   }
   const pass = array[0]
-  try {(bcrypt.compareSync(passwd, pass))
-    const token = jwt.sign({
-      id,
-      role,
-      email
-    }, secret, { expiresIn: '2 days'})
-    return res.send({
-      success: true,
-      token,
-      id,
-      role,
-    })
+  try {
+    if((bcrypt.compareSync(passwd, pass))){
+      const token = jwt.sign({
+        id,
+        role,
+        email
+      }, secret, { expiresIn: '2 days'})
+      return res.send({
+        success: true,
+        token,
+        id,
+        role,
+      })
+      
+    }
+    throw new error
   } catch(e) {
     return res.status(404).send({
       error:  {messege: 'wrong credentials.'},
